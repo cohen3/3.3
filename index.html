@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="controller.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<body>
+    <div class="header">                            <!------- Header DIV here --------->
+        <a href="#top" class="logo"><img src="images/pcgif.gif" height="40" width="85" id="logoimg"/></a>
+        <p id="insert" style="display: inline;color:yellow"></p>
+        <div class="header-right">
+            <button class="button" id="loginbtn" onclick="loginButton()" >Login</button>
+            <button class="button" onclick="OpenGame()" >Game</button>
+            <button class="button" onclick="OpenRegister()" >Register</button>
+            <button class="button" id="about" onclick="OpenWelcome()" >About</button>
+            <button class="button" onclick="OpenSetting()" >Settings</button>
+        </div>
+    </div>
+<br><br><br><br><br><br>
+<div ng-app="myApp" ng-controller="myCtrl">
+
+First Name: <input type="text" ng-model="firstName"><br>
+Last Name: <input type="text" ng-model="lastName"><br>
+<br>
+Full Name: {{firstName + " " + lastName}}
+
+</div>
+
+</body>
+</html>
