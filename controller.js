@@ -19,12 +19,12 @@ app.controller('myCtrl', function($scope, $http) {
         //cat = _.sample(cat, 2)
         $http({
             method: 'GET',
-            url: 'http://localhost:3001/rand3POI/0.2',
+            url: 'http://localhost:3000/rand3POI/0.2',
           }).then(function(response) {
               $scope.resp = response.data[0]['picture_link'];
               values = response.data;
             }).catch(function(error){
-                alert(error.status);
+                alert("here"+error.status);
             });
     }
 
@@ -71,12 +71,27 @@ app.controller('myCtrl', function($scope, $http) {
     $scope.token = null;
     $scope.getName=function(){
         return  $scope.firstName+ $scope.lastName; };
-    $scope.validuser = function() {
+        $scope.validuser = function() {
         $http.get('http://localhost:3000/login/' + $scope.username + '/' + $scope.password).then(function (res) {
             $scope.logged = res.data;
             alert(res.data)
-        }).catch(function(res){alert(res.status);});
+        }).catch(function(res){alert("here 2 "+res.status);});
     };
+
+    function register()
+    {
+        var parameter = JSON.stringify({type:"user", username:user_email, password:user_password});
+        $http.post('http://localhost:3000/adduser', parameter).
+        success(function(data, status, headers, config) {
+            // this callback will be called asynchronously
+            // when the response is available
+            console.log(data);
+          }).
+          error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+          });
+    }
 });
 
 angular.element(document).ready(function () {

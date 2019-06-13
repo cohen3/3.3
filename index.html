@@ -22,11 +22,9 @@
     </div>
 <br><br><br><br><br><br>
 
-<div id="main" class="main">
-
+<div id="welcome" style="display: block;">
+welcome div
 </div>
-
-
 
 
 <!-- The Modal -->
@@ -44,15 +42,15 @@
       </div>
       <div class="modal-footer">
         <h3>It'll be fun</h3>
-        <a id="reg" class="button" onclick="OpenRegister()">Register</a>
+        <a id="reg" class="button" style="cursor: pointer;" onclick="OpenRegister()">Register</a>
         /
-        <a id="log" class="button" onclick="loginButton()">login</a>
+        <a id="log" class="button" style="cursor: pointer;" onclick="loginButton()">login</a>
       </div>
     </div>
-    ng-controller
 </div>
+
                                           <!-- Login Div -->
-<div id="login" style="display: block;">
+<div id="login" style="display: none;">
     <input type="text" name="name" placeholder="User name" ng-model="username">
     <input type="password" name="password" placeholder="Password" ng-model="password">
     <button ng-click="validuser()">Login</button>
@@ -128,4 +126,112 @@
   </div>
 
 </body>
+<script>
+  var login = false;
+    /**
+     * close chosen divs
+     * @param welcome
+     * @param login
+     * @param game
+     * @param settings
+     * @param register
+     * @param left
+     * @param right
+     */
+    function closeDivs(welcome, login, game, settings,register, left,right, instr)
+    {
+        if(welcome)
+            document.getElementById("welcome").style.display = "none";
+        if(register)
+            document.getElementById("register").style.display = "none";
+        if(login)
+            document.getElementById("login").style.display = "none";
+        if(game)
+            document.getElementById("game").style.display = "none";
+        if(settings)
+            document.getElementById("settings").style.display = "none";
+        if(instr)
+            document.getElementById("inst1").style.display = "none";
+    }
+    function OpenGame()
+    {
+        if(document.getElementById("loginbtn").innerText === "Login") {
+            alert("You need to login first");
+            return;
+        }
+        StopGame();
+        closeDivs(true, true, true, true, true,true,true, true);
+        var game_div = document.getElementById("game");
+        var inst = document.getElementById("inst1");
+        if(game_div.style.display === "none")
+            game_div.style.display = "block";
+        if(inst.style.display === "none")
+            inst.style.display = "inline-block";
+    }
+    function loginButton()
+    {
+        closeDivs(true, true, true, true, true,true,true, true);
+        StopGame();
+        if(document.getElementById("loginbtn").innerText === "Disconnect")
+        {
+            login = false;
+            document.getElementById("loginbtn").innerText = "Login";
+            document.getElementById("insert").innerText = "";
+        }
+        var login_div = document.getElementById("login");
+        if(login_div.style.display === "none")
+            login_div.style.display = "block";
+    }
+    function OpenWelcome()
+    {
+        closeDivs(true, true, true, true, true,true,true, true);
+        var welcome_div = document.getElementById("welcome");
+        if(welcome_div.style.display === "none")
+            welcome_div.style.display = "block";
+    }
+    function OpenRegister()
+    {
+        closeDivs(true, true, true, true, true,true,true, true);
+        var register_div = document.getElementById("register");
+        if(register_div.style.display === "none")
+            register_div.style.display = "block";
+    }
+    function OpenSetting()
+    {
+        closeDivs(true, true, true, true, true,true,true, true);
+        var setting_div = document.getElementById("settings");
+        if(setting_div.style.display === "none")
+            setting_div.style.display = "block";
+    }
+    //     Model
+    var modal = document.getElementById('myModal');
+    var btn = document.getElementById("about");
+    var span = document.getElementsByClassName("close")[0];
+    // When the user clicks on the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    };
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    };
+    document.onkeydown = function(evt) {
+        evt = evt || window.event;
+        var isEscape = false;
+        if ("key" in evt) {
+            isEscape = (evt.key === "Escape" || evt.key === "Esc");
+        } else {
+            isEscape = (evt.keyCode === 27);
+        }
+        if (isEscape) {
+            modal.style.display = "none";
+        }
+    };
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+</script>
 </html>
