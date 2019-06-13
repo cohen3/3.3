@@ -24,7 +24,7 @@ app.controller('myCtrl', function($scope, $http) {
               $scope.resp = response.data[0]['picture_link'];
               values = response.data;
             }).catch(function(error){
-                alert("here"+error.status);
+                alert(error.status);
             });
     }
 
@@ -55,10 +55,10 @@ app.controller('myCtrl', function($scope, $http) {
         }
         setTimeout(showSlides, 4000); // Change image every 2 seconds
     }
-
+    $scope.tmpname="";
     $scope.firstName = "Guest";
     $scope.lastName = "";
-    $scope.username="";
+    $scope.username="Guest";
     $scope.password="";
     $scope.City= "";
     $scope.Country= "";
@@ -99,4 +99,3 @@ angular.element(document).ready(function () {
     // var a = document.getElementById("test");
     // a.innerText = "loaded";
     });
-

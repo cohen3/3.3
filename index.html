@@ -24,6 +24,10 @@
 
 <div id="welcome" style="display: block;">
 welcome div
+First Name: <input type="text" ng-model="firstName"><br>
+Last Name: <input type="text" ng-model="lastName"><br>
+<br>
+    <p>Full Name: {{getName()}}</p>
 </div>
 
 
@@ -47,6 +51,7 @@ welcome div
         <a id="log" class="button" style="cursor: pointer;" onclick="loginButton()">login</a>
       </div>
     </div>
+    ng-controller
 </div>
 
                                           <!-- Login Div -->
@@ -60,40 +65,48 @@ welcome div
 
 </div>
                                           <!-- Register Div -->
-<div id="register" style="display: none;">
-
+<div id="register" style="display: block;">
     <label for="firstname"><b>First Name</b></label>
-    <input type="text" id="firstname" placeholder="First name" pattern="^[a-zA-Z]+$" required>
+    <input type="text" id="firstname" placeholder="First name" pattern="^[a-zA-Z]+$" ng-model="firstName" required>
 
     <label for="lastname"><b>Last Name</b></label>
-     <input type="text" id="lastname" placeholder="Last name" pattern="^[a-zA-Z]+$" required>
+     <input type="text" id="lastname" placeholder="Last name" pattern="^[a-zA-Z]+$"  ng-model="lastName" required>
 
-     <label for="City"><b>Last Name</b></label>
-     <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$" required>
+     <label for="City"><b>City</b></label>
+     <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$"  ng-model="City" required>
 
     <label for="username1"><b>User name</b></label>
-    <label for="username1"></label><input type="text" placeholder="Enter username" id="username1" name="username1" required>
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" id="psw" name="psw" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
-           title="Password must contain at least 8 or more characters and digits" required>
-    <input type="text" name="Country" placeholder="Country" ng-model="Country">
+    <input type="text" placeholder=" 3 to 8 characters" id="username1" name="username"
+    ng-model="tmpname" required>
+
+    <label for="password1"><b>Password</b></label>
+    <input type="password" placeholder=" 5 to 10 characters & digits" id="password1" name="psw"
+    ng-model="password" required>
+
+    <label for="country"><b>City</b></label>
+    <input type="text" id="country" placeholder="country" ng-model="country" required>
+
     <input type="text" placeholder="Enter Email" id="email" name="email"
-    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Invalid email address" required>
-    <input type="text" name="Interest1" placeholder="Interest" ng-model="Interest1">
-    <input type="text" name="Interest2" placeholder="Interest" ng-model="Interest2">
-    <input type="text" name="Interests" placeholder="Interests" ng-model="Interests">
-    <input type="text" name="Question" placeholder="Question" ng-model="Question">
-    <input type="password" name="Answer" placeholder="Answer" ng-model="Answer">
-    <button ng-click="validuser()">Register</button>
-</div>
+    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Invalid email address" ng-model="email" required>
 
+    <label for="Interest1"><b>Interest 1</b></label>
+    <input type="text" id="Interest1" placeholder="Interest 1"  ng-model="Interest1" required>
 
+    <label for="Interest2"><b>Interest 2</b></label>
+    <input type="text" id="Interest2" placeholder="Interest 2" ng-model="Interest2" required>
 
+    <label for="Interests"><b>Interests</b></label>
+    <input type="text" id="Interests" placeholder="comma seperated Interests" ng-model="Interests" required>
 
+    <label for="Question"><b>Question</b></label>
+    <input type="text" name="Question" placeholder="Question" id="Question" ng-model="Question">
 
+    <label for="Answer"><b>Answer</b></label>
+    <input type="password" name="Answer" placeholder="Answer" id="Answer" ng-model="Answer">
 
+    <button ng-click="createuser()">Register</button>
 
-<!-- slider -->
+    <!-- slider -->
 <div id="foot">
   <div class="slideshow-container">
 
@@ -125,6 +138,7 @@ welcome div
   </div>
   </div>
 
+</div>
 </body>
 <script>
   var login = false;
