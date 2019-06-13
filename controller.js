@@ -19,7 +19,7 @@ app.controller('myCtrl', function($scope, $http) {
         //cat = _.sample(cat, 2)
         $http({
             method: 'GET',
-            url: 'http://localhost:3001/rand3POI/0.2',
+            url: 'http://localhost:3000/rand3POI/0.2',
           }).then(function(response) {
               $scope.resp = response.data[0]['picture_link'];
               values = response.data;
@@ -55,10 +55,10 @@ app.controller('myCtrl', function($scope, $http) {
         }
         setTimeout(showSlides, 4000); // Change image every 2 seconds
     }
-
-    $scope.firstName = "Guest";
+    $scope.tmpname="";
+    $scope.firstName = "";
     $scope.lastName = "";
-    $scope.username="";
+    $scope.username="Guest";
     $scope.password="";
     $scope.City= "";
     $scope.Country= "";
@@ -70,13 +70,37 @@ app.controller('myCtrl', function($scope, $http) {
     $scope.Answer= "";
     $scope.token = null;
     $scope.getName=function(){
-        return  $scope.firstName+ $scope.lastName; };
+        return  $scope.firstName+ $scope.lastName;};
     $scope.validuser = function() {
-        $http.get('http://localhost:3000/login/' + $scope.username + '/' + $scope.password).then(function (res) {
+        $http.get('http://localhost:3000/login/' + $scope.tmpname + '/' + $scope.password).then(function (res) {
             $scope.logged = res.data;
-            alert(res.data)
+            $scope.username=$scope.tmpname;
+            $scope.password=password1;
         }).catch(function(res){alert(res.status);});
     };
+app.controller('myCtrl', function($scope, $http,$window) {
+        $scope.firstName = "Guest";
+        $scope.lastName = "";
+        $scope.username="";
+        $scope.password="";
+        $scope.City= "";
+        $scope.Country= "";
+        $scope.Email= "";
+        $scope.Interest1= "";
+        $scope.Interest2= "";
+        $scope.Interests= "";
+        $scope.Question= "";
+        $scope.Answer= "";
+        $scope.isin = false;
+        $scope.getName=function(){
+            return  $scope.firstName+ $scope.lastName; };
+        $scope.validuser = function() {
+            $http.get('http://localhost:3000/login/' + $scope.username + '/' + $scope.password).then(function (res) {
+                alert("welcome "+$scope.username);
+                isin=true;
+                $window.sessionStorage.setItem(username,res.data);
+            }).catch(function(res){alert("wrong username or password");});
+        };
 });
 
 angular.element(document).ready(function () {
@@ -84,4 +108,4 @@ angular.element(document).ready(function () {
     // var a = document.getElementById("test");
     // a.innerText = "loaded";
     });
-
+})
