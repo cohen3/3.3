@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="controller.js"></script>
-<script src="popup.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<!--<script src="popup.js"></script>-->
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="popup.css" />
-<body>
-    <div class="header">                            <!------- Header DIV here --------->
+<body ng-app="myApp" ng-controller="myCtrl">
+    <div class="header" >                            <!------- Header DIV here --------->
         <a href="#top" class="logo"><img src="images/earth.gif" height="40" width="85" id="logoimg"/></a>
-        <p id="insert" style="display: inline;color:yellow"></p>
         <div class="header-right">
             <button class="button" id="loginbtn" onclick="loginButton()" >Login</button>
             <button class="button" onclick="OpenGame()" >Game</button>
@@ -17,15 +16,15 @@
             <button class="button" id="about" onclick="OpenWelcome()" >About</button>
             <button class="button" onclick="OpenSetting()" >Settings</button>
         </div>
+        <p>Hello {{getName()}}</p>
     </div>
 <br><br><br><br><br><br>
-<div ng-app="myApp" ng-controller="myCtrl">
+<div>
 
 First Name: <input type="text" ng-model="firstName"><br>
 Last Name: <input type="text" ng-model="lastName"><br>
 <br>
-Full Name: {{firstName + " " + lastName}}
-
+    <p>Full Name: {{getName()}}</p>
 </div>
 
 <!-- The Modal -->
@@ -45,8 +44,47 @@ Full Name: {{firstName + " " + lastName}}
         <h3>It'll be fun</h3>
       </div>
     </div>
+    ng-controller
+</div>
+                                          <!-- Login Div -->
+<div id="login" style="display: block;">
+    <input type="text" name="name" placeholder="User name" ng-model="username">
+    <input type="password" name="password" placeholder="Password" ng-model="password">
+    <button ng-click="validuser()">Login</button>
+    <button type="button" id="forgot-btn" ng-click="cd()">Forgot Password?</button>
+    <p ng-bind="Question"></p>
+    <input type="text" name="Answer" placeholder="Answer" ng-model="Answer" style="display: none;">
 
+</div>
+                                          <!-- Register Div -->
+<div id="register" style="display: none;">
+
+    <label for="firstname"><b>First Name</b></label>
+    <input type="text" id="firstname" placeholder="First name" pattern="^[a-zA-Z]+$" required>
+
+    <label for="lastname"><b>Last Name</b></label>
+     <input type="text" id="lastname" placeholder="Last name" pattern="^[a-zA-Z]+$" required>
+
+     <label for="City"><b>Last Name</b></label>
+     <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$" required>
+
+    <label for="username"><b>User name</b></label>
+    <label for="username1"></label><input type="text" placeholder="Enter username" id="username1" name="username1" required>
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" id="psw" name="psw" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+           title="Password must contain at least 8 or more characters and digits" required>
+    <input type="text" name="Country" placeholder="Country" ng-model="Country">  
+    <input type="text" placeholder="Enter Email" id="email" name="email"
+    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Invalid email address" required>
+    <input type="text" name="Interest1" placeholder="Interest" ng-model="Interest1">  
+    <input type="text" name="Interest2" placeholder="Interest" ng-model="Interest2">  
+    <input type="text" name="Interests" placeholder="Interests" ng-model="Interests">  
+    <input type="text" name="Question" placeholder="Question" ng-model="Question"> 
+    <input type="password" name="Answer" placeholder="Answer" ng-model="Answer">
+    <button ng-click="validuser()">Register</button>
 </div>
 
 </body>
 </html>
+
+
