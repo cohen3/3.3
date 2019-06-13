@@ -34,7 +34,7 @@ app.controller('myCtrl', function($scope, $http) {
         var dots = document.getElementsByClassName("dot");
         if(values.length > 0){
             for (i = 0; i < slides.length; i++){
-                slides[i].style.display = "none";  
+                slides[i].style.display = "none";
             }
             document.getElementById('txt1').innerText = values[0]['name'];
             document.getElementById('txt2').innerText = values[1]['name'];
@@ -46,19 +46,42 @@ app.controller('myCtrl', function($scope, $http) {
             // $scope.txt2 = values[1]['name'];
             // $scope.txt3 = values[2]['name'];
             slideIndex++;
-            if (slideIndex > slides.length) {slideIndex = 1}    
+            if (slideIndex > slides.length) {slideIndex = 1}
             for (i = 0; i < dots.length; i++) {
                 dots[i].className = dots[i].className.replace(" active", "");
             }
-            slides[slideIndex-1].style.display = "block";  
+            slides[slideIndex-1].style.display = "block";
             dots[slideIndex-1].className += " active";
         }
         setTimeout(showSlides, 4000); // Change image every 2 seconds
     }
+
+    $scope.firstName = "Guest";
+    $scope.lastName = "";
+    $scope.username="";
+    $scope.password="";
+    $scope.City= "";
+    $scope.Country= "";
+    $scope.Email= "";
+    $scope.Interest1= "";
+    $scope.Interest2= "";
+    $scope.Interests= "";
+    $scope.Question= "";
+    $scope.Answer= "";
+    $scope.token = null;
+    $scope.getName=function(){
+        return  $scope.firstName+ $scope.lastName; };
+    $scope.validuser = function() {
+        $http.get('http://localhost:3000/login/' + $scope.username + '/' + $scope.password).then(function (res) {
+            $scope.logged = res.data;
+            alert(res.data)
+        }).catch(function(res){alert(res.status);});
+    };
 });
 
 angular.element(document).ready(function () {
     // alert("page ready");
     // var a = document.getElementById("test");
     // a.innerText = "loaded";
-});
+    });
+
