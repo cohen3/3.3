@@ -3,7 +3,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="controller.js"></script>
-<!--<script src="popup.js"></script>-->
+<script src="popup.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="popup.css" />
 <link rel="stylesheet" type="text/css" href="slider.css" />
@@ -24,10 +24,6 @@
 
 <div id="welcome" style="display: block;">
 welcome div
-First Name: <input type="text" ng-model="firstName"><br>
-Last Name: <input type="text" ng-model="lastName"><br>
-<br>
-    <p>Full Name: {{getName()}}</p>
 </div>
 
 
@@ -51,69 +47,53 @@ Last Name: <input type="text" ng-model="lastName"><br>
         <a id="log" class="button" style="cursor: pointer;" onclick="loginButton()">login</a>
       </div>
     </div>
-    ng-controller
 </div>
 
                                           <!-- Login Div -->
-<div id="login" style="display: block;">
-    <input type="text" name="name" placeholder="User name" ng-model="tmpname">
+<div id="login" style="display: none;">
+    <input type="text" name="name" placeholder="User name" ng-model="username">
     <input type="password" name="password" placeholder="Password" ng-model="password">
     <button ng-click="validuser()">Login</button>
-    <button type="button" id="forgot-btn" ng-click="getq()">Forgot Password?</button>
+    <button type="button" id="forgot-btn" ng-click="cd()">Forgot Password?</button>
     <p ng-bind="Question"></p>
-    <input type="text" name="Answer" placeholder="Answer" id="sec_q" ng-model="Answer" style="display: none;">
+    <input type="text" name="Answer" placeholder="Answer" ng-model="Answer" style="display: none;">
 
 </div>
                                           <!-- Register Div -->
 <div id="register" style="display: none;">
+
     <label for="firstname"><b>First Name</b></label>
-    <input type="text" id="firstname" placeholder="First name" pattern="^[a-zA-Z]+$" ng-model="firstName" required>
+    <input type="text" id="firstname" placeholder="First name" pattern="^[a-zA-Z]+$" required>
 
     <label for="lastname"><b>Last Name</b></label>
-     <input type="text" id="lastname" placeholder="Last name" pattern="^[a-zA-Z]+$"  ng-model="lastName" required>
+     <input type="text" id="lastname" placeholder="Last name" pattern="^[a-zA-Z]+$" required>
 
-     <label for="City"><b>City</b></label>
-     <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$"  ng-model="City" required>
+     <label for="City"><b>Last Name</b></label>
+     <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$" required>
 
     <label for="username1"><b>User name</b></label>
-    <input type="text" placeholder=" 3 to 8 characters" id="username1" name="username"
-    ng-model="tmpname" required>
-
-    <label for="password1"><b>Password</b></label>
-    <input type="password" placeholder=" 5 to 10 characters & digits" id="password1" name="psw"
-    ng-model="password" required>
-
-    <label for="country"><b>City</b></label>
-    <input type="text" id="country" placeholder="country" ng-model="country" required>
-
+    <label for="username1"></label><input type="text" placeholder="Enter username" id="username1" name="username1" required>
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" id="psw" name="psw" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+           title="Password must contain at least 8 or more characters and digits" required>
+    <input type="text" name="Country" placeholder="Country" ng-model="Country">
     <input type="text" placeholder="Enter Email" id="email" name="email"
-    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Invalid email address" ng-model="email" required>
+    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Invalid email address" required>
+    <input type="text" name="Interest1" placeholder="Interest" ng-model="Interest1">
+    <input type="text" name="Interest2" placeholder="Interest" ng-model="Interest2">
+    <input type="text" name="Interests" placeholder="Interests" ng-model="Interests">
+    <input type="text" name="Question" placeholder="Question" ng-model="Question">
+    <input type="password" name="Answer" placeholder="Answer" ng-model="Answer">
+    <button ng-click="validuser()">Register</button>
+</div>
 
-    <label for="Interest1"><b>Interest 1</b></label>
-    <input type="text" id="Interest1" placeholder="Interest 1"  ng-model="Interest1" required>
 
-    <label for="Interest2"><b>Interest 2</b></label>
-    <input type="text" id="Interest2" placeholder="Interest 2" ng-model="Interest2" required>
 
-    <label for="Interests"><b>Interests</b></label>
-    <input type="text" id="Interests" placeholder="comma seperated Interests" ng-model="Interests" required>
 
-    <label for="Question1"><b>Question1</b></label>
-    <input type="text" name="Question1" placeholder="Question1" id="Question1" ng-model="Question1">
 
-    <label for="Answer1"><b>Answer1</b></label>
-    <input type="password" name="Answer1" placeholder="Answer1" id="Answer1" ng-model="Answer1">
 
-    <label for="Question2"><b>Question2</b></label>
-    <input type="text" name="Question2" placeholder="Question2" id="Question2" ng-model="Question2">
 
-    <label for="Answer2"><b>Answer2</b></label>
-    <input type="password" name="Answer2" placeholder="Answer2" id="Answer2" ng-model="Answer2">
-
-    <button ng-click="createuser()">Register</button>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <!-- slider -->
-    <!--
+<!-- slider -->
 <div id="foot">
   <div class="slideshow-container">
 
@@ -145,8 +125,6 @@ Last Name: <input type="text" ng-model="lastName"><br>
   </div>
   </div>
 
-</div>
--->
 </body>
 <script>
   var login = false;
