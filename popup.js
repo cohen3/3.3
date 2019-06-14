@@ -13,6 +13,10 @@ var logged = false;
             $("#myModal").css("display", "none");
         });
 
+        $("#log").click(function() {
+            $("#myModal").css("display", "none");
+        });
+
         // When the user clicks anywhere outside of the modal, close it
         $.onclick = function(event) {
           if (event.target == modal) {

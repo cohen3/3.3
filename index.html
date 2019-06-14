@@ -63,28 +63,28 @@ welcome div
 <div id="register" style="display: none;">
 
     <label for="firstname"><b>First Name</b></label>
-    <input type="text" id="firstname" placeholder="First name" pattern="^[a-zA-Z]+$" required>
+    <input type="text" id="firstname" placeholder="First name" ng-model="firstName" pattern="^[a-zA-Z]+$" required>
 
     <label for="lastname"><b>Last Name</b></label>
-     <input type="text" id="lastname" placeholder="Last name" pattern="^[a-zA-Z]+$" required>
+     <input type="text" id="lastname" placeholder="Last name" ng-model="lastName" pattern="^[a-zA-Z]+$" required>
 
-     <label for="City"><b>Last Name</b></label>
-     <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$" required>
+     <label for="City"><b>City</b></label>
+     <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$" ng-model="City" required>
 
     <label for="username1"><b>User name</b></label>
-    <label for="username1"></label><input type="text" placeholder="Enter username" id="username1" name="username1" required>
+    <label for="username1"></label><input type="text" placeholder="Enter username" id="username1" name="username1" ng-model="tmpname" required>
     <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" id="psw" name="psw" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
-           title="Password must contain at least 8 or more characters and digits" required>
+    <input type="password" placeholder="Enter Password" id="psw" name="psw" title="Password must contain at least 8 or more characters and digits" ng-model="password" required>
     <input type="text" name="Country" placeholder="Country" ng-model="Country">
-    <input type="text" placeholder="Enter Email" id="email" name="email"
-    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Invalid email address" required>
+    <input type="text" placeholder="Enter Email" id="email" name="email" title="Invalid email address" ng-model="email" required>
     <input type="text" name="Interest1" placeholder="Interest" ng-model="Interest1">
     <input type="text" name="Interest2" placeholder="Interest" ng-model="Interest2">
     <input type="text" name="Interests" placeholder="Interests" ng-model="Interests">
-    <input type="text" name="Question" placeholder="Question" ng-model="Question">
-    <input type="password" name="Answer" placeholder="Answer" ng-model="Answer">
-    <button ng-click="validuser()">Register</button>
+    <input type="text" name="Question1" placeholder="Question 1" ng-model="Question1">
+    <input type="password" name="Answer2" placeholder="Answer 1" ng-model="Answer1">
+    <input type="text" name="Question2" placeholder="Question 2" ng-model="Question2">
+    <input type="password" name="Answer2" placeholder="Answer 2" ng-model="Answer2">
+    <button ng-click="register()">Register</button>
 </div>
 
 
@@ -146,12 +146,12 @@ welcome div
             document.getElementById("register").style.display = "none";
         if(login)
             document.getElementById("login").style.display = "none";
-        if(game)
-            document.getElementById("game").style.display = "none";
-        if(settings)
-            document.getElementById("settings").style.display = "none";
-        if(instr)
-            document.getElementById("inst1").style.display = "none";
+        // if(game)
+        //     document.getElementById("game").style.display = "none";
+        // if(settings)
+        //     document.getElementById("settings").style.display = "none";
+        // if(instr)
+        //     document.getElementById("inst1").style.display = "none";
     }
     function OpenGame()
     {
@@ -159,7 +159,6 @@ welcome div
             alert("You need to login first");
             return;
         }
-        StopGame();
         closeDivs(true, true, true, true, true,true,true, true);
         var game_div = document.getElementById("game");
         var inst = document.getElementById("inst1");
@@ -171,13 +170,6 @@ welcome div
     function loginButton()
     {
         closeDivs(true, true, true, true, true,true,true, true);
-        StopGame();
-        if(document.getElementById("loginbtn").innerText === "Disconnect")
-        {
-            login = false;
-            document.getElementById("loginbtn").innerText = "Login";
-            document.getElementById("insert").innerText = "";
-        }
         var login_div = document.getElementById("login");
         if(login_div.style.display === "none")
             login_div.style.display = "block";

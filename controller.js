@@ -83,21 +83,33 @@ app.controller('myCtrl', function($scope, $http) {
         }).catch(function(res){alert("question problem "+res.status);});
     };
     $scope.register = function(){
-
-        var parameter = JSON.stringify({type:"user", username:$scope.tmpname, password:$scope.password,first_name:$scope.firstName
-                                        ,last_name:$scope.lastName,question1:Question1,answer1:Answer1,question2:Question2
-                                        ,answer2:Answer2,city:City,country:Country,email:Email,interest1:Interest1
-                                    ,interest2:Interest2,interestrest:Interests});
-        $http.post('http://localhost:3000/adduser', parameter).
-        success(function(data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            console.log(data);
-          }).
-          error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-          });
+        try{
+        var parameter =                {type:"user",
+                                        username:$scope.tmpname,
+                                        password:$scope.password,
+                                        first_name:$scope.firstName,
+                                        last_name:$scope.lastName,
+                                        question1:$scope.Question1,
+                                        answer1:$scope.Answer1,
+                                        question2:$scope.Question2,
+                                        answer2:$scope.Answer2,
+                                        city:$scope.City,
+                                        country:$scope.Country,
+                                        email:$scope.email,
+                                        interest1:$scope.Interest1,
+                                        interest2:$scope.Interest2,
+                                        interests:$scope.Interests
+                                        };
+                                    }
+                                    catch(error)
+                                    {
+                                        alert(error);
+                                    }
+        $http.post('http://localhost:3000/adduser', parameter).then(function successCallback(response) {
+            alert(response.data);
+        }, function errorCallback(response) {
+            alert(response.status);
+        });
     }
 });
 
