@@ -18,7 +18,7 @@
             <button class="button" id="about" onclick="OpenWelcome()" >About</button>
             <button class="button" onclick="OpenSetting()" >Settings</button>
         </div>
-        <p>Hello {{getName()}}</p>
+        <p><font color="red">Hello {{username}}</font></p>
     </div>
 <br><br><br><br><br><br>
 
@@ -50,8 +50,8 @@ welcome div
 </div>
 
                                           <!-- Login Div -->
-<div id="login" style="display: none;">
-    <input type="text" name="name" placeholder="User name" ng-model="username">
+<div id="login" style="display: block;">
+    <input type="text" name="name" placeholder="User name" ng-model="tmpname">
     <input type="password" name="password" placeholder="Password" ng-model="password">
     <button ng-click="validuser()">Login</button>
     <button type="button" id="forgot-btn" ng-click="cd()">Forgot Password?</button>
