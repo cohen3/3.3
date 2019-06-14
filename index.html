@@ -50,10 +50,10 @@ welcome div
 </div>
 
                                           <!-- Login Div -->
-<div id="login" style="display: block;">
+<div id="login" style="display: none;">
     <input type="text" name="name" placeholder="User name" ng-model="tmpname">
     <input type="password" name="password" placeholder="Password" ng-model="password">
-    <button ng-click="validuser()">Login</button>
+    <button id="logbtn" ng-click="validuser()">Login</button>
     <button type="button" id="forgot-btn" ng-click="cd()">Forgot Password?</button>
     <p ng-bind="Question"></p>
     <input type="text" name="Answer" placeholder="Answer" ng-model="Answer" style="display: none;">
