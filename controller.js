@@ -2,9 +2,24 @@ var app = angular.module('myApp', []);
 
 app.controller('myCtrl', function($scope, $http) {
     getRecommended();
+    $scope.resp = "";
+    $scope.isin = false;
+    $scope.tmpname="";
     $scope.firstName = "";
     $scope.lastName = "";
-    $scope.resp = "";
+    $scope.username="Guest";
+    $scope.password="";
+    $scope.City= "";
+    $scope.Country= "";
+    $scope.Email= "";
+    $scope.Interest1= "";
+    $scope.Interest2= "";
+    $scope.Interests= "";
+    $scope.Question1= "";
+    $scope.Answer1= "";
+    $scope.Question2= "";
+    $scope.Answer2= "";
+    $scope.token = null;
     var slideIndex = 0;
     var values = [];
     showSlides();
@@ -14,18 +29,40 @@ app.controller('myCtrl', function($scope, $http) {
     $scope.foo2 = function() {
         return $scope.lastName + " " + $scope.firstName;
     };
-    function getRecommended()
-    {
-        //cat = _.sample(cat, 2)
-        $http({
-            method: 'GET',
-            url: 'http://localhost:3000/rand3POI/0.2',
-          }).then(function(response) {
-              $scope.resp = response.data[0]['picture_link'];
-              values = response.data;
-            }).catch(function(error){
-                alert(error.status);
-            });
+       $scope.getName=function(){
+        return  $scope.firstName+ $scope.lastName; };
+        $scope.validuser = function() {
+            $http.get('http://localhost:3000/login/' + $scope.tmpname + '/' + $scope.password).then(function (res) {
+                alert("welcome "+$scope.username);
+                $scope.isin=true;
+                $scope.username=$scope.tmpname;
+                $window.sessionStorage.setItem(username,res.data);
+            }).catch(function(res){alert("wrong username or password");});
+    };
+    $scope.getq = function() {
+       
+        $http.get('http://localhost:3000/getquestion/' + $scope.tmpname).then(function (res) {
+            $scope.Question = res.data;
+            document.getElementById("sec_q").style.display = "inline";
+            alert(res.data)
+        }).catch(function(res){alert("question problem "+res.status);});
+    };
+    $scope.register = function(){
+
+        var parameter = JSON.stringify({type:"user", username:$scope.tmpname, password:$scope.password,first_name:$scope.firstName
+                                        ,last_name:$scope.lastName,question1:Question1,answer1:Answer1,question2:Question2
+                                        ,answer2:Answer2,city:City,country:Country,email:Email,interest1:Interest1
+                                    ,interest2:Interest2,interestrest:Interests});
+        $http.post('http://localhost:3000/adduser', parameter).
+        success(function(data, status, headers, config) {
+            // this callback will be called asynchronously
+            // when the response is available
+            console.log(data);
+          }).
+          error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+          });
     }
 
     function showSlides() {
@@ -55,42 +92,18 @@ app.controller('myCtrl', function($scope, $http) {
         }
         setTimeout(showSlides, 4000); // Change image every 2 seconds
     }
-    $scope.tmpname="";
-    $scope.firstName = "Guest";
-    $scope.lastName = "";
-    $scope.username="Guest";
-    $scope.password="";
-    $scope.City= "";
-    $scope.Country= "";
-    $scope.Email= "";
-    $scope.Interest1= "";
-    $scope.Interest2= "";
-    $scope.Interests= "";
-    $scope.Question= "";
-    $scope.Answer= "";
-    $scope.token = null;
-    $scope.getName=function(){
-        return  $scope.firstName+ $scope.lastName; };
-        $scope.validuser = function() {
-        $http.get('http://localhost:3000/login/' + $scope.username + '/' + $scope.password).then(function (res) {
-            $scope.logged = res.data;
-            alert(res.data)
-        }).catch(function(res){alert("here 2 "+res.status);});
-    };
-
-    function register()
+    function getRecommended()
     {
-        var parameter = JSON.stringify({type:"user", username:user_email, password:user_password});
-        $http.post('http://localhost:3000/adduser', parameter).
-        success(function(data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            console.log(data);
-          }).
-          error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-          });
+        //cat = _.sample(cat, 2)
+        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/rand3POI/0.2',
+        }).then(function(response) {
+            $scope.resp = response.data[0]['picture_link'];
+            values = response.data;
+        }).catch(function(error){
+            alert(error.status);
+        });
     }
 });
 

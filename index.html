@@ -3,7 +3,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="controller.js"></script>
-<script src="popup.js"></script>
+<!--<script src="popup.js"></script>-->
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="popup.css" />
 <link rel="stylesheet" type="text/css" href="slider.css" />
@@ -55,17 +55,17 @@ Last Name: <input type="text" ng-model="lastName"><br>
 </div>
 
                                           <!-- Login Div -->
-<div id="login" style="display: none;">
-    <input type="text" name="name" placeholder="User name" ng-model="username">
+<div id="login" style="display: block;">
+    <input type="text" name="name" placeholder="User name" ng-model="tmpname">
     <input type="password" name="password" placeholder="Password" ng-model="password">
     <button ng-click="validuser()">Login</button>
-    <button type="button" id="forgot-btn" ng-click="cd()">Forgot Password?</button>
+    <button type="button" id="forgot-btn" ng-click="getq()">Forgot Password?</button>
     <p ng-bind="Question"></p>
-    <input type="text" name="Answer" placeholder="Answer" ng-model="Answer" style="display: none;">
+    <input type="text" name="Answer" placeholder="Answer" id="sec_q" ng-model="Answer" style="display: none;">
 
 </div>
                                           <!-- Register Div -->
-<div id="register" style="display: block;">
+<div id="register" style="display: none;">
     <label for="firstname"><b>First Name</b></label>
     <input type="text" id="firstname" placeholder="First name" pattern="^[a-zA-Z]+$" ng-model="firstName" required>
 
@@ -98,15 +98,22 @@ Last Name: <input type="text" ng-model="lastName"><br>
     <label for="Interests"><b>Interests</b></label>
     <input type="text" id="Interests" placeholder="comma seperated Interests" ng-model="Interests" required>
 
-    <label for="Question"><b>Question</b></label>
-    <input type="text" name="Question" placeholder="Question" id="Question" ng-model="Question">
+    <label for="Question1"><b>Question1</b></label>
+    <input type="text" name="Question1" placeholder="Question1" id="Question1" ng-model="Question1">
 
-    <label for="Answer"><b>Answer</b></label>
-    <input type="password" name="Answer" placeholder="Answer" id="Answer" ng-model="Answer">
+    <label for="Answer1"><b>Answer1</b></label>
+    <input type="password" name="Answer1" placeholder="Answer1" id="Answer1" ng-model="Answer1">
+
+    <label for="Question2"><b>Question2</b></label>
+    <input type="text" name="Question2" placeholder="Question2" id="Question2" ng-model="Question2">
+
+    <label for="Answer2"><b>Answer2</b></label>
+    <input type="password" name="Answer2" placeholder="Answer2" id="Answer2" ng-model="Answer2">
 
     <button ng-click="createuser()">Register</button>
-
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <!-- slider -->
+    <!--
 <div id="foot">
   <div class="slideshow-container">
 
@@ -139,6 +146,7 @@ Last Name: <input type="text" ng-model="lastName"><br>
   </div>
 
 </div>
+-->
 </body>
 <script>
   var login = false;
