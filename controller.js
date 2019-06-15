@@ -1,6 +1,6 @@
 var app = angular.module('myApp', []);
 
-app.controller('myCtrl', function($scope, $http, $window) {
+app.controller('myCtrl', function($scope, $http, $window, $q) {
     getRecommended();
     $scope.resp = "";
     $scope.isin = false;
@@ -19,6 +19,7 @@ app.controller('myCtrl', function($scope, $http, $window) {
     $scope.Answer1= "";
     $scope.Question2= "";
     $scope.Answer2= "";
+    $scope.passwordR="";
     $scope.token = null;
     var slideIndex = 0;
     var values = [];
@@ -74,11 +75,21 @@ app.controller('myCtrl', function($scope, $http, $window) {
             }).catch(function(res){alert("wrong username or password");});
     };
     $scope.getq = function() {
-       
+
         $http.get('http://localhost:3000/getquestion/' + $scope.tmpname).then(function (res) {
-            $scope.Question = res.data;
-            document.getElementById("sec_q").style.display = "inline";
-            alert(res.data)
+            var lst =["question1","question2"];
+            $scope.q_num = Math.floor(Math.random() * 2);
+            var q_select=lst[$scope.q_num];
+            $scope.Question1 = res.data[q_select];
+            document.getElementById("sec_q1").style.display = "inline";
+            document.getElementById("forgot-btn2").style.display = "inline"
+        }).catch(function(res){alert("question problem "+res.status);});
+    };
+    $scope.getpass = function() {
+        $scope.Answer2 = $scope.Answer1;
+        $http.get('http://localhost:3000/getpassword/' + $scope.tmpname+ '/' + $scope.Answer1+ '/' + $scope.Answer2).then(function (res) {
+            $scope.passwordR=res.data;
+            document.getElementById("text_per_pass").style.display = "inline"
         }).catch(function(res){alert("question problem "+res.status);});
     };
     $scope.register = function(){
@@ -108,6 +119,35 @@ app.controller('myCtrl', function($scope, $http, $window) {
             alert(response.data);
         }, function errorCallback(response) {
             alert(response.status);
+        });
+    }
+
+    $scope.clickSliderOne = function()
+    {
+        clickedSlider("txt1");
+    }
+    $scope.clickSliderTwo = function()
+    {
+        clickedSlider("txt2");
+    }
+    $scope.clickSliderThree = function()
+    {
+        clickedSlider("txt3");
+    }
+
+    function clickedSlider(slider){
+        var poi_name = document.getElementById(slider);
+        var prom1 = $http.get('http://localhost:3000/getpoibyname/'+poi_name.innerText)
+        var prom2 = $http.get('http://localhost:3000/getTopReviewsByName/'+poi_name.innerText);
+        $q.all([prom1, prom2]).then(function(results){
+            document.getElementById('poi_view').style.display = "block";
+            document.getElementById('poi_img').src = results[0].data['picture_link'];
+            document.getElementById('details').innerText = results[0].data['description'];
+            document.getElementById('rev1').innerText = results[1].data[0]['review'];
+            document.getElementById('rev2').innerText = results[1].data[1]['review'];
+            var rank = parseFloat(results[0].data['rank']);
+            rank = rank*100;
+            document.getElementById('rankper').innerText = rank+"%";
         });
     }
 });

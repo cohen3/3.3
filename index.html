@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="popup.css" />
 <link rel="stylesheet" type="text/css" href="slider.css" />
+<link rel="stylesheet" type="text/css" href="table.css" />
 <body ng-app="myApp" ng-controller="myCtrl">
     <div class="header">                            <!------- Header DIV here --------->
         <a href="#top" class="logo"><img src="images/earth.gif" height="40" width="85" id="logoimg"/></a>
@@ -49,15 +50,50 @@ welcome div
     </div>
 </div>
 
-                                          <!-- Login Div -->
-<div id="login" style="display: none;">
-    <input type="text" name="name" placeholder="User name" ng-model="tmpname">
-    <input type="password" name="password" placeholder="Password" ng-model="password">
-    <button id="logbtn" ng-click="validuser()">Login</button>
-    <button type="button" id="forgot-btn" ng-click="cd()">Forgot Password?</button>
-    <p ng-bind="Question"></p>
-    <input type="text" name="Answer" placeholder="Answer" ng-model="Answer" style="display: none;">
+<div id="poi_view" style="display: none;">
+    
+    <table>
+        <tr>
+            <th colspan="3" style="text-align: center;"> Location: {{ poi_name }} </th>
+        </tr>
+        <tr>
+          <td id="rev1">January</td>
+          <td rowspan="4"><img id="poi_img" width="400" height="400"></td>
+        </tr>
+        <tr>
+          <td id="rev2">February</td>
+        </tr>
+        <tr>
+          <td><p id="details">hello</p></td>
+        </tr>
+        <tr>
+            <td><p id="rankper">1.4</p></td>
+        </tr>
+      </table>
+</div>
 
+<!-- About Div -->
+<div id="about" style="display: block;">
+    
+        <p>
+        our informative city hall website:    <a href="https://www.beer-sheva.muni.il/Pages/default.aspx">
+        <img border="0"  src="images\citylogo.png" width="140" height="100"></a>
+        </p>
+        <h1>Welcome to our site, here you can see information about the posh shona daled  <img src="images\dalet.jpg"></h1>
+        <h1>and our beautiful hotel <img src="images\hotel.jpg"></h1>
+        <h1>and our professional students <img src="images\party.jpg"></h1>
+</div>
+
+<!-- Login Div -->
+<div id="login" style="display: none;">
+        <input type="text" name="name" placeholder="User name" ng-model="tmpname">
+        <input type="password" name="password" placeholder="Password" ng-model="password">
+        <button id="logbtn" ng-click="validuser()">Login</button>
+        <button type="button" id="forgot-btn" ng-click="getq()">Forgot Password?</button>
+        <p ng-bind="Question1"></p>
+        <input type="text" name="Answer" id="sec_q1" placeholder="Answer" ng-model="Answer1" style="display: none;" >
+        <button type="button" id="forgot-btn2" ng-click="getpass()" style="display: none;">get Password</button><br>
+        <p id="text_per_pass"style="display: none;">password is : </p><p ng-bind="passwordR" ></p>
 </div>
                                           <!-- Register Div -->
 <div id="register" style="display: none;">
@@ -99,19 +135,19 @@ welcome div
 
   <div class="mySlides fade">
     <div class="numbertext">1 / 3</div>
-    <img id="im1" width="300" height="300">
+    <img id="im1" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderOne()">
     <div class="text" id="txt1">{{ txt1 }}</div>
   </div>
 
   <div class="mySlides fade">
     <div class="numbertext">2 / 3</div>
-    <img id="im2" width="300" height="300">
+    <img id="im2" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderTwo()">
     <div class="text" id="txt2">{{ txt2 }}</div>
   </div>
 
   <div class="mySlides fade">
     <div class="numbertext">3 / 3</div>
-    <img id="im3" width="300" height="300">
+    <img id="im3" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderThree()">
     <div class="text" id="txt3">{{ txt3 }}</div>
   </div>
 

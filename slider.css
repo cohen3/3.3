@@ -54,7 +54,7 @@ img {vertical-align: middle;}
 }
 
 #foot{
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 50%;
     margin-left:-150px;
