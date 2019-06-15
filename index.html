@@ -13,18 +13,19 @@
         <a href="#top" class="logo"><img src="images/earth.gif" height="40" width="85" id="logoimg"/></a>
         <p id="insert" style="display: inline;color:yellow"></p>
         <div class="header-right">
-            <button class="button" id="loginbtn" onclick="loginButton()" >Login</button>
+            <button class="button" id="loginbtn" onclick="loginButton()" ng-click="disconnect()">{{ loginstatus }}</button>
             <button class="button" onclick="OpenGame()" >Game</button>
             <button class="button" onclick="OpenRegister()" >Register</button>
-            <button class="button" id="about" onclick="OpenWelcome()" >About</button>
+            <button class="button" id="aboutbtn" onclick="OpenWelcome()" >About</button>
             <button class="button" onclick="OpenSetting()" >Settings</button>
         </div>
-        <p><font color="red">Hello {{username}}</font></p>
+        <p><font color="red">Hello {{ username }}</font></p>
     </div>
 <br><br><br><br><br><br>
 
+<!-- Welcome Div-->
 <div id="welcome" style="display: block;">
-welcome div
+welcome {{ firstName }}
 </div>
 
 
@@ -73,7 +74,7 @@ welcome div
 </div>
 
 <!-- About Div -->
-<div id="about" style="display: block;">
+<div id="about" style="display: none;">
     
         <p>
         our informative city hall website:    <a href="https://www.beer-sheva.muni.il/Pages/default.aspx">
@@ -94,6 +95,7 @@ welcome div
         <input type="text" name="Answer" id="sec_q1" placeholder="Answer" ng-model="Answer1" style="display: none;" >
         <button type="button" id="forgot-btn2" ng-click="getpass()" style="display: none;">get Password</button><br>
         <p id="text_per_pass"style="display: none;">password is : </p><p ng-bind="passwordR" ></p>
+        <p id="timer" style="display: none;"></p>
 </div>
                                           <!-- Register Div -->
 <div id="register" style="display: none;">
@@ -132,23 +134,23 @@ welcome div
 <!-- slider -->
 <div id="foot">
   <div class="slideshow-container">
-
+    <h1 id="title_rec">Loading Recomended</h1>
   <div class="mySlides fade">
     <div class="numbertext">1 / 3</div>
     <img id="im1" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderOne()">
-    <div class="text" id="txt1">{{ txt1 }}</div>
+    <div class="text" id="txt1" style="display: none;"></div>
   </div>
 
   <div class="mySlides fade">
     <div class="numbertext">2 / 3</div>
     <img id="im2" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderTwo()">
-    <div class="text" id="txt2">{{ txt2 }}</div>
+    <div class="text" id="txt2" style="display: none;"></div>
   </div>
 
   <div class="mySlides fade">
     <div class="numbertext">3 / 3</div>
     <img id="im3" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderThree()">
-    <div class="text" id="txt3">{{ txt3 }}</div>
+    <div class="text" id="txt3" style="display: none;"></div>
   </div>
 
   </div>
@@ -174,7 +176,7 @@ welcome div
      * @param left
      * @param right
      */
-    function closeDivs(welcome, login, game, settings,register, left,right, instr)
+    function closeDivs(welcome, login, game, settings,register, left,right, about)
     {
         if(welcome)
             document.getElementById("welcome").style.display = "none";
@@ -186,8 +188,8 @@ welcome div
         //     document.getElementById("game").style.display = "none";
         // if(settings)
         //     document.getElementById("settings").style.display = "none";
-        // if(instr)
-        //     document.getElementById("inst1").style.display = "none";
+        if(about)
+            document.getElementById("about").style.display = "none";
     }
     function OpenGame()
     {
@@ -205,17 +207,19 @@ welcome div
     }
     function loginButton()
     {
-        closeDivs(true, true, true, true, true,true,true, true);
-        var login_div = document.getElementById("login");
-        if(login_div.style.display === "none")
-            login_div.style.display = "block";
+        if(!logged){
+            closeDivs(true, true, true, true, true,true,true, true);
+            var login_div = document.getElementById("login");
+            if(login_div.style.display === "none")
+                login_div.style.display = "block";
+        }
     }
     function OpenWelcome()
     {
         closeDivs(true, true, true, true, true,true,true, true);
-        var welcome_div = document.getElementById("welcome");
-        if(welcome_div.style.display === "none")
-            welcome_div.style.display = "block";
+        var about_div = document.getElementById("about");
+        if(about_div.style.display === "none")
+            about_div.style.display = "block";
     }
     function OpenRegister()
     {

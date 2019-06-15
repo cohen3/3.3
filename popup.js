@@ -1,4 +1,4 @@
-var logged = false;
+    var logged = false;
     var firstTimeInPage = true;
     $(document).ready(function(){
 

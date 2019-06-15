@@ -1,13 +1,13 @@
 var app = angular.module('myApp', []);
 
-app.controller('myCtrl', function($scope, $http, $window, $q) {
+app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
     getRecommended();
     $scope.resp = "";
     $scope.isin = false;
     $scope.tmpname="";
     $scope.firstName = "";
     $scope.lastName = "";
-    $scope.username="Guest";
+    $scope.username="";
     $scope.password="";
     $scope.City= "";
     $scope.Country= "";
@@ -20,10 +20,60 @@ app.controller('myCtrl', function($scope, $http, $window, $q) {
     $scope.Question2= "";
     $scope.Answer2= "";
     $scope.passwordR="";
-    $scope.token = null;
+    checkLoggedUserOnStartUp();
+    var time = 6;
     var slideIndex = 0;
     var values = [];
     showSlides();
+    setWelcomeDiv()
+    function setWelcomeDiv()
+    {
+        if($window.sessionStorage.getItem("lastuser") != '')
+        {
+            GetLoggedUserInfo();
+        }
+        else
+        {
+            $scope.firstName = "Guest";
+        }
+    }
+
+    function GetLoggedUserInfo()
+    {
+        var currectUser = $window.sessionStorage.getItem("lastuser");
+        var req = {
+            method: 'GET',
+            url: 'http://localhost:3000/logged/getuser/'+currectUser,
+            headers: {
+                'x-auth-token': $window.sessionStorage.getItem("token")
+            }
+        };
+        $http(req)
+        .then(function(response){
+            $scope.firstName = response.data[0]['first_name'];
+        }).catch(function(error){
+            alert(error.data);
+        });
+    }
+
+    function checkLoggedUserOnStartUp(){
+        if($window.sessionStorage.getItem("lastuser") != '')
+        {
+            var name = $window.sessionStorage.getItem("lastuser");
+            logged = true;
+            $scope.loginstatus = "Disconnect";
+            $scope.username = name;
+        }
+        else
+        {
+            logged = false;  
+            $scope.username = "Guest";
+            $scope.loginstatus = "Login";
+            $window.sessionStorage.setItem("lastuser", '');
+            $window.sessionStorage.setItem("token", '');
+        }
+    }
+    
     function getRecommended()
     {
         $http({
@@ -61,19 +111,60 @@ app.controller('myCtrl', function($scope, $http, $window, $q) {
             }
             slides[slideIndex-1].style.display = "block";
             dots[slideIndex-1].className += " active";
+            document.getElementById('title_rec').innerText = "Recommended Place: \n"+values[slideIndex-1]['name'];
         }
         setTimeout(showSlides, 4000); // Change image every 2 seconds
     }
+
     $scope.getName=function(){
-        return  $scope.firstName+ $scope.lastName; };
-        $scope.validuser = function() {
+        return  $scope.firstName + $scope.lastName; 
+    };
+
+    /**
+     * login method 
+     */    
+    $scope.validuser = function() {
+        if(logged == false){
             $http.get('http://localhost:3000/login/' + $scope.tmpname + '/' + $scope.password).then(function (res) {
                 $scope.isin=true;
                 $scope.username=$scope.tmpname;
-                alert("welcome "+$scope.username);
-                $window.sessionStorage.setItem($scope.username,res.data);
+                // alert("welcome "+$scope.username);
+                $window.sessionStorage.setItem("token",res.data);
+                $window.sessionStorage.setItem("lastuser",$scope.username);
+                $scope.loginstatus = "Disconnect";
+                logged = true;
+                closeDivs(false, true, true, true,true, true,true, true);
+                document.getElementById('welcome').style.display = "block";
+                setWelcomeDiv();
+
             }).catch(function(res){alert("wrong username or password");});
+        }
+        else
+        {
+            $scope.loginstatus = "Login";
+            $window.sessionStorage.setItem("token",null);
+            $window.sessionStorage.setItem("lastuser",null);
+            $scope.username = "Guest";
+            logged = false;
+            setWelcomeDiv();
+        }
+        
     };
+
+
+    $scope.disconnect = function(){
+        if(logged)
+        {
+            $scope.loginstatus = "Login";
+            $window.sessionStorage.setItem("token",'');
+            $window.sessionStorage.setItem("lastuser",'');
+            $scope.username = "Guest";
+            logged = false;
+            setWelcomeDiv();
+        }
+    };
+
+
     $scope.getq = function() {
 
         $http.get('http://localhost:3000/getquestion/' + $scope.tmpname).then(function (res) {
@@ -85,13 +176,44 @@ app.controller('myCtrl', function($scope, $http, $window, $q) {
             document.getElementById("forgot-btn2").style.display = "inline"
         }).catch(function(res){alert("question problem "+res.status);});
     };
+
+
     $scope.getpass = function() {
-        $scope.Answer2 = $scope.Answer1;
-        $http.get('http://localhost:3000/getpassword/' + $scope.tmpname+ '/' + $scope.Answer1+ '/' + $scope.Answer2).then(function (res) {
+        var a1 = "__";
+        var a2 = "__";
+        if($scope.q_num == 0) a1 = $scope.Answer1;
+        else a2 = $scope.Answer1; 
+        $http.get('http://localhost:3000/getpassword/' + $scope.tmpname+ '/' + a1+ '/' + a2).then(function (res) {
             $scope.passwordR=res.data;
             document.getElementById("text_per_pass").style.display = "inline"
-        }).catch(function(res){alert("question problem "+res.status);});
+            document.getElementById('timer').style.display = "block";
+            try{
+                time = 6;
+                $timeout(timer, 1);
+            }
+            catch(error){alert(error);}
+        }).catch(function(res){alert("Wrong answer "+res.status);});
     };
+    
+
+    var timer = function() {
+        if( time > 0 ) {
+            time -= 1;
+            document.getElementById('timer').innerText = "Disappear after: "+time+" seconds.";
+            $timeout(timer, 1000);
+        }
+        else
+        {
+            $scope.passwordR='';
+            $scope.Question1 = '';
+            $scope.Answer1 = '';
+            document.getElementById("text_per_pass").style.display = "none"
+            document.getElementById('timer').style.display = "none";
+            document.getElementById("sec_q1").style.display = "none";
+            document.getElementById("forgot-btn2").style.display = "none"
+        }
+    }
+
     $scope.register = function(){
         try{
         var parameter =                {type:"user",
@@ -143,14 +265,27 @@ app.controller('myCtrl', function($scope, $http, $window, $q) {
             document.getElementById('poi_view').style.display = "block";
             document.getElementById('poi_img').src = results[0].data['picture_link'];
             document.getElementById('details').innerText = results[0].data['description'];
-            document.getElementById('rev1').innerText = results[1].data[0]['review'];
-            document.getElementById('rev2').innerText = results[1].data[1]['review'];
+            var r1 = '1) No Reviews Posted.';
+            var r2 = '2) No Reviews Posted.';
+            if(results[1].data.length > 0){
+                r1 = '1) '+results[1].data[0]['review'];
+                if(results[1].data.length > 1)
+                    r2 = '2) '+results[1].data[1]['review'];
+            }
+            document.getElementById('rev1').innerText = r1;
+            document.getElementById('rev2').innerText = r2;
             var rank = parseFloat(results[0].data['rank']);
             rank = rank*100;
             document.getElementById('rankper').innerText = rank+"%";
+        }).catch(function(error){
+            alert(error);
         });
     }
 });
+
+// app.controller('loggedController', function($scope, $http, $window, $q, $timeout) {
+//     $scope.logged_controller = "hello from logged controller";
+// });
 
 angular.element(document).ready(function () {
     // alert("page ready");
