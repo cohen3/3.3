@@ -1,7 +1,9 @@
 var app = angular.module('myApp', []);
 
 app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
+    checkKeys();
     getRecommended();
+    getcountries();
     $scope.resp = "";
     $scope.isin = false;
     $scope.tmpname="";
@@ -25,16 +27,30 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
     var slideIndex = 0;
     var values = [];
     showSlides();
-    setWelcomeDiv()
+    setWelcomeDiv();
+
+    function checkKeys()
+    {
+        if($window.sessionStorage.getItem("lastuser") === null)
+            $window.sessionStorage.setItem("lastuser", '');
+        if($window.sessionStorage.getItem("token") === null)
+            $window.sessionStorage.setItem("token", '');
+    }
+
     function setWelcomeDiv()
     {
         if($window.sessionStorage.getItem("lastuser") != '')
         {
             GetLoggedUserInfo();
+            document.getElementById('reg_up').style.display = 'none';
+            document.getElementById('log_up').style.display = 'none';
+            document.getElementById('menubtn').style.display = "block";
         }
         else
         {
             $scope.firstName = "Guest";
+            document.getElementById('reg_up').style.display = 'inline';
+            document.getElementById('log_up').style.display = 'inline';
         }
     }
 
@@ -63,6 +79,9 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
             logged = true;
             $scope.loginstatus = "Disconnect";
             $scope.username = name;
+            document.getElementById('reg_up').style.display = 'none';
+            document.getElementById('log_up').style.display = 'none';
+            document.getElementById('menubtn').style.display = "block";
         }
         else
         {
@@ -71,6 +90,8 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
             $scope.loginstatus = "Login";
             $window.sessionStorage.setItem("lastuser", '');
             $window.sessionStorage.setItem("token", '');
+            document.getElementById('reg_up').style.display = 'inline';
+            document.getElementById('log_up').style.display = 'inline';
         }
     }
     
@@ -128,6 +149,7 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
             $http.get('http://localhost:3000/login/' + $scope.tmpname + '/' + $scope.password).then(function (res) {
                 $scope.isin=true;
                 $scope.username=$scope.tmpname;
+                $scope.firstName = ' ';
                 // alert("welcome "+$scope.username);
                 $window.sessionStorage.setItem("token",res.data);
                 $window.sessionStorage.setItem("lastuser",$scope.username);
@@ -135,6 +157,7 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
                 logged = true;
                 closeDivs(false, true, true, true,true, true,true, true);
                 document.getElementById('welcome').style.display = "block";
+                document.getElementById('menubtn').style.display = "block";
                 setWelcomeDiv();
 
             }).catch(function(res){alert("wrong username or password");});
@@ -160,6 +183,7 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
             $window.sessionStorage.setItem("lastuser",'');
             $scope.username = "Guest";
             logged = false;
+            document.getElementById('menubtn').style.display = "none";
             setWelcomeDiv();
         }
     };
@@ -281,6 +305,13 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
             alert(error);
         });
     }
+
+    function getcountries(){
+        $http.get('http://localhost:3000/getcountries').then(function (res) {
+            $scope.countries=res.data;
+        }).catch(function(res){});
+    };
+    
 });
 
 // app.controller('loggedController', function($scope, $http, $window, $q, $timeout) {

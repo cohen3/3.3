@@ -4,10 +4,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="controller.js"></script>
 <script src="popup.js"></script>
+<link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="popup.css" />
 <link rel="stylesheet" type="text/css" href="slider.css" />
 <link rel="stylesheet" type="text/css" href="table.css" />
+<link rel="stylesheet" type="text/css" href="splittedPage.css" />
 <body ng-app="myApp" ng-controller="myCtrl">
     <div class="header">                            <!------- Header DIV here --------->
         <a href="#top" class="logo"><img src="images/earth.gif" height="40" width="85" id="logoimg"/></a>
@@ -15,42 +17,48 @@
         <div class="header-right">
             <button class="button" id="loginbtn" onclick="loginButton()" ng-click="disconnect()">{{ loginstatus }}</button>
             <button class="button" onclick="OpenGame()" >Game</button>
-            <button class="button" onclick="OpenRegister()" >Register</button>
+            <button class="button" id="regbtn" onclick="OpenRegister()" >Register</button>
             <button class="button" id="aboutbtn" onclick="OpenWelcome()" >About</button>
             <button class="button" onclick="OpenSetting()" >Settings</button>
         </div>
-        <p><font color="red">Hello {{ username }}</font></p>
+        <p><font color="red" style="position: absolute; left: 10%;">Hello {{ username }} <a id="reg_up" class="button" style="cursor: pointer;" onclick="OpenRegister()">&nbsp;&nbsp;&nbsp;<u>Register</u>&nbsp;&nbsp;&nbsp;/</a>
+        <a id="log_up" class="button" style="cursor: pointer;" onclick="loginButton()"><u>login</u></a></font></p>
     </div>
 <br><br><br><br><br><br>
+
+<div id="splittedDiv" style="display: block;">
+    <div class="split left">
+            <div class="centered">
+            <h2>Jane Flex</h2>
+            <p>Some text.</p>
+            </div>
+    </div>
+      
+    <div class="split right">
+            <div class="centered">
+            <h2>John Doe</h2>
+            <p>Some text here too.</p>
+            </div>
+    </div>
+</div>
+
+
+<!-- Sidebar -->
+<div class="w3-sidebar w3-bar-block w3-animate-left" style="display:none;z-index:5;top:85px;" id="mySidebar">
+        <button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close &times;</button>
+        <button class="w3-bar-item w3-button">My Points Of Interest</button>
+        <button class="w3-bar-item w3-button">My Interests</button>
+        <button class="w3-bar-item w3-button">Settings</button>
+</div>
+<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
+<div id="menubtn" style="position: absolute; left: 0%; top: 100px; display: none;"><button class="w3-button w3-white w3-xxlarge" onclick="w3_open()">&#9776; Menu</button></div>
 
 <!-- Welcome Div-->
 <div id="welcome" style="display: block;">
 welcome {{ firstName }}
 </div>
 
-
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close" id="close">&times;</span>
-        <h2>Hello guest!</h2>
-      </div>
-      <div class="modal-body">
-        <p>It seems like youre not a member in out app :(</p>
-        <p>We invite you to register and login to put site!</p>
-      </div>
-      <div class="modal-footer">
-        <h3>It'll be fun</h3>
-        <a id="reg" class="button" style="cursor: pointer;" onclick="OpenRegister()">Register</a>
-        /
-        <a id="log" class="button" style="cursor: pointer;" onclick="loginButton()">login</a>
-      </div>
-    </div>
-</div>
-
+<!-- POI table view -->
 <div id="poi_view" style="display: none;">
     
     <table>
@@ -75,14 +83,18 @@ welcome {{ firstName }}
 
 <!-- About Div -->
 <div id="about" style="display: none;">
-    
-        <p>
+        <h1>
         our informative city hall website:    <a href="https://www.beer-sheva.muni.il/Pages/default.aspx">
         <img border="0"  src="images\citylogo.png" width="140" height="100"></a>
-        </p>
-        <h1>Welcome to our site, here you can see information about the posh shona daled  <img src="images\dalet.jpg"></h1>
-        <h1>and our beautiful hotel <img src="images\hotel.jpg"></h1>
-        <h1>and our professional students <img src="images\party.jpg"></h1>
+        </h1>
+        <h1>Welcome to our site, here you can see information about the posh shona daled  <img src="images\dalet.jpg" height="160" width="160"></h1>
+        <h1>and our beautiful hotel <img src="images\hotel.jpg" height="160" width="160"></h1>
+        <h1>and our professional students <img src="images\party.jpg" height="160" width="160"></h1>
+        <h1>everyone are welcome to visit <a href="https://www.google.com/maps/place/%D7%91%D7%90%D7%A8+%D7%A9%D7%91%D7%A2%E2%80%AD/data=!4m2!3m1!1s0x15026640029f8777:0x8dee8012deb5dd8?sa=X&ved=2ahUKEwjq55X21OviAhWZWhUIHfF1BKoQ8gEwAHoECAoQAQ">
+          Be'er-Sheva</a> in the coordinates 34.706400 to 34.869200 East and 31.174294 to 31.332650 North</h1>
+        <h1>you can reach out city using many different  <a href="https://www.bus.co.il/otobusimmvc?">busses</a>
+           or by <a href="https://www.rail.co.il/">train</a> </h1>
+           <h2><font size = "14"><b>all there is left to say is hello, welcome and enjoy :)</b></font></h2>
 </div>
 
 <!-- Login Div -->
@@ -102,26 +114,41 @@ welcome {{ firstName }}
 
     <label for="firstname"><b>First Name</b></label>
     <input type="text" id="firstname" placeholder="First name" ng-model="firstName" pattern="^[a-zA-Z]+$" required>
-
+    <br>
     <label for="lastname"><b>Last Name</b></label>
      <input type="text" id="lastname" placeholder="Last name" ng-model="lastName" pattern="^[a-zA-Z]+$" required>
-
+     <br>
      <label for="City"><b>City</b></label>
      <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$" ng-model="City" required>
-
-    <label for="username1"><b>User name</b></label>
-    <label for="username1"></label><input type="text" placeholder="Enter username" id="username1" name="username1" ng-model="tmpname" required>
-    <label for="psw"><b>Password</b></label>
+     <br>
+    <label for="username1"><b>User name, Must be 3-8 letters only</b></label>
+    <input type="text" placeholder="Enter username" id="username1" name="username1" ng-model="tmpname" required>
+    <br>
+    <label for="psw"><b>Password, Must be 5-10 letters and digits</b></label>
     <input type="password" placeholder="Enter Password" id="psw" name="psw" title="Password must contain at least 8 or more characters and digits" ng-model="password" required>
-    <input type="text" name="Country" placeholder="Country" ng-model="Country">
-    <input type="text" placeholder="Enter Email" id="email" name="email" title="Invalid email address" ng-model="email" required>
-    <input type="text" name="Interest1" placeholder="Interest" ng-model="Interest1">
-    <input type="text" name="Interest2" placeholder="Interest" ng-model="Interest2">
-    <input type="text" name="Interests" placeholder="Interests" ng-model="Interests">
-    <input type="text" name="Question1" placeholder="Question 1" ng-model="Question1">
-    <input type="password" name="Answer2" placeholder="Answer 1" ng-model="Answer1">
-    <input type="text" name="Question2" placeholder="Question 2" ng-model="Question2">
-    <input type="password" name="Answer2" placeholder="Answer 2" ng-model="Answer2">
+    <br>
+    <label for="Country"><b>Country</b></label>
+    <select ng-model="Country">
+      <option id=Country ng-repeat="x in countries" >{{x}}</option>
+      </select>
+      <br>
+      <label for="email"><b>Email adress</b></label>
+    <input type="text" placeholder="Enter Email" id="email" name="email" title="Invalid email address" ng-model="email" required><br>
+    <label for="Interest1"><b>Interest 1</b></label>
+    <input type="text" name="Interest1" placeholder="Interest" ng-model="Interest1"><br>
+    <label for="Interest2"><b>Interest 2</b></label>
+    <input type="text" name="Interest2" placeholder="Interest" ng-model="Interest2"><br>
+    <label for="Interests"><b>Interests</b></label>
+    <input type="text" name="Interests" placeholder="Interests" ng-model="Interests"><br>
+    <label for="Question1"><b>Question1</b></label>
+    <input type="text" name="Question1" placeholder="Question 1" ng-model="Question1"><br>
+    <label for="Answer1"><b>Answer1</b></label>
+    <input type="password" name="Answer1" id="Answer1" placeholder="Answer 1" ng-model="Answer1"><br>
+    <label for="Question2"><b>Question2</b></label>
+    <input type="text" id="Question2"name="Question2" placeholder="Question 2" ng-model="Question2"><br>
+    <label for="Answer2"><b>Answer2</b></label>
+    <input type="password" id="Answer2"name="Answer2" placeholder="Answer 2" ng-model="Answer2"><br>
+    
     <button ng-click="register()">Register</button>
 </div>
 
@@ -129,26 +156,25 @@ welcome {{ firstName }}
 
 
 
-
+<br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
 
 <!-- slider -->
 <div id="foot">
   <div class="slideshow-container">
     <h1 id="title_rec">Loading Recomended</h1>
   <div class="mySlides fade">
-    <div class="numbertext">1 / 3</div>
     <img id="im1" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderOne()">
     <div class="text" id="txt1" style="display: none;"></div>
   </div>
 
   <div class="mySlides fade">
-    <div class="numbertext">2 / 3</div>
     <img id="im2" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderTwo()">
     <div class="text" id="txt2" style="display: none;"></div>
   </div>
 
   <div class="mySlides fade">
-    <div class="numbertext">3 / 3</div>
     <img id="im3" width="300" height="300" style="cursor: pointer;" ng-click="clickSliderThree()">
     <div class="text" id="txt3" style="display: none;"></div>
   </div>
@@ -163,6 +189,28 @@ welcome {{ firstName }}
   </div>
   </div>
 
+  <!-- The Modal -->
+<div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close" id="close">&times;</span>
+            <h2>Hello guest!</h2>
+          </div>
+          <div class="modal-body">
+            <p>It seems like youre not a member in out app :(</p>
+            <p>We invite you to register and login to put site!</p>
+          </div>
+          <div class="modal-footer">
+            <h3>It'll be fun</h3>
+            <a id="reg" class="button" style="cursor: pointer;" onclick="OpenRegister()">Register</a>
+            /
+            <a id="log" class="button" style="cursor: pointer;" onclick="loginButton()">login</a>
+          </div>
+        </div>
+    </div>
+    
 </body>
 <script>
   var login = false;
@@ -176,7 +224,7 @@ welcome {{ firstName }}
      * @param left
      * @param right
      */
-    function closeDivs(welcome, login, game, settings,register, left,right, about)
+    function closeDivs(welcome, login, table, settings,register, left,right, about)
     {
         if(welcome)
             document.getElementById("welcome").style.display = "none";
@@ -184,8 +232,8 @@ welcome {{ firstName }}
             document.getElementById("register").style.display = "none";
         if(login)
             document.getElementById("login").style.display = "none";
-        // if(game)
-        //     document.getElementById("game").style.display = "none";
+        if(table)
+            document.getElementById("poi_view").style.display = "none";
         // if(settings)
         //     document.getElementById("settings").style.display = "none";
         if(about)
@@ -240,9 +288,9 @@ welcome {{ firstName }}
     var btn = document.getElementById("about");
     var span = document.getElementsByClassName("close")[0];
     // When the user clicks on the button, open the modal
-    btn.onclick = function() {
-        modal.style.display = "block";
-    };
+    // btn.onclick = function() {
+    //     modal.style.display = "block";
+    // };
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         modal.style.display = "none";
@@ -265,5 +313,14 @@ welcome {{ firstName }}
             modal.style.display = "none";
         }
     };
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+    }
 </script>
 </html>
