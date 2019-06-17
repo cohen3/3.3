@@ -1,9 +1,10 @@
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ['ngSanitize']);
 
 app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
     checkKeys();
     getRecommended();
     getcountries();
+    getcategories();
     $scope.resp = "";
     $scope.isin = false;
     $scope.tmpname="";
@@ -28,7 +29,6 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
     var values = [];
     showSlides();
     setWelcomeDiv();
-
     function checkKeys()
     {
         if($window.sessionStorage.getItem("lastuser") === null)
@@ -311,7 +311,164 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
             $scope.countries=res.data;
         }).catch(function(res){});
     };
+
+    function getcategories(){
+        $http.get('http://localhost:3000/categories').then(function (res) {
+            $scope.categories=[];
+            for(var i=0;i<res.data.length;i++){
+                $scope.categories.push(res.data[i].category)
+            }
+        }).catch(function(res){});
+    };
+
+    /**
+     * get poi by category
+     */
+    $scope.getpoicat=function(){
+        var poicat = document.getElementById('cats').value;
+        $http({
+            url: 'http://localhost:3000/getAllPOIsbyCat/', 
+            method: "GET",
+            params: {category:poicat}
+         }).then(function (res) {
+            $scope.poisbycat=res.data;
+            buildPOITable();
+            if(document.getElementById("myCheck").checked){
+                sortTable();
+            }
+        }).catch(function(res){alert(res.status+" here");});
+    };
+
+    /**
+     * get poi by its name
+     */
+    $scope.getpoiname=function(){
+        var poiname = document.getElementById('poiname').value;
+        $http.get('http://localhost:3000/getpoibyname/'+poiname).then(function (res) {
+            $scope.pois=res.data;
+            alert(res.data.ID);
+        }).catch(function(res){alert(res.status);});
+    };
+
+    function getUser(){
+        var currectUser = $window.sessionStorage.getItem("lastuser");
+        if(currectUser === '') return null;
+        var req = {
+            method: 'GET',
+            url: 'http://localhost:3000/logged/getuser/'+currectUser,
+            headers: {
+                'x-auth-token': $window.sessionStorage.getItem("token")
+            }
+        };
+        return $http(req);
+    }
+
+    $scope.sidebarClickPOIs = function()
+    {
+        document.getElementById('splittedDiv').style.display = "none";
+        document.getElementById('loggedUserDiv').style.display = "block";
+        $scope.loggedUser = "<h1> here are your current POIs: </h1>";
+        var params = {
+            username:$window.sessionStorage.getItem('lastuser')
+        };
+        var req = {
+            method: 'GET',
+            url: 'http://localhost:3000/logged/usergetPOI',
+            headers: {
+                'x-auth-token': $window.sessionStorage.getItem("token")
+            },
+            params: {
+                username:$window.sessionStorage.getItem('lastuser')
+            }
+        };
+        alert("ok");
+        var userdata = $http(req);
+        userdata.then(function(response){
+            var promises = [];
+            for(var i = 0; i < response.data.length; i = i+1)
+            {
+                promises.push($http.get('http://localhost:3000/getpoibyID/'+response.data[i]));
+            }
+            $q.all(promises).then(function(response2){
+                alert("ok2");
+            });
+        }).catch(function(res){alert(res.status);});
+    };
+
+    $scope.sidebarInterests = function()
+    {
+        document.getElementById('splittedDiv').style.display = "none";
+        document.getElementById('loggedUserDiv').style.display = "block";
+        $scope.loggedUser = "<h1> here are your Interests: </h1>";
+    };
+
+    $scope.sidebarSettings = function()
+    {
+        document.getElementById('splittedDiv').style.display = "none";
+        document.getElementById('loggedUserDiv').style.display = "block";
+        $scope.loggedUser = "<h1> Settings: </h1>";
+        var userdata = getUser();
+        userdata.then(function(response){
+            $scope.loggedUser += "<table border=\"1\" id=\"datatable\" style=\"background-color: #f1f1c1;\">";
+            $scope.loggedUser += "<tr style=\"padding: 15px;text-align: left;\">";
+            $scope.loggedUser += "<th>Settings</th>";
+            $scope.loggedUser += "<th>Value</th>";
+            $scope.loggedUser += "</tr>";
+            angular.forEach(response.data[0], function(value, key){
+                $scope.loggedUser += "<tr style=\"padding: 15px;text-align: left;\">";
+                $scope.loggedUser += "<td>"+key+"</td>";
+                $scope.loggedUser += "<td>"+value+"</td>";
+                $scope.loggedUser += "</tr>";
+           });
+           $scope.loggedUser += "</table>";
+        }).catch(function(res){});
+
+    };
+
+    $scope.sidebarhome = function()
+    {
+        document.getElementById('loggedUserDiv').style.display = "none";
+        $scope.loggedUser = "";
+        document.getElementById('splittedDiv').style.display = "block";
+    }
+
+    function buildPOITable() {
+        document.getElementById('excelDataTable').innerHTML = "";
+        var columns = addAllColumnHeaders($scope.poisbycat);
+        for (var i = 0 ; i <$scope.poisbycat.length ; i++) {
+            var row$ = $('<tr/>');
+            for (var colIndex = 0 ; colIndex < columns.length ; colIndex++) {
+                var cellValue = $scope.poisbycat[i][columns[colIndex]];
+                //alert("cellValue is "+cellValue+" type is "+typeof(cellValue));
+                if (cellValue == null) { cellValue = ""; }
+                else if(colIndex==columns.length-1){
+                    row$.append($('<td/>').html("<img src=\""+cellValue+"\" width=\"300\" height=\"300\"></img>"));
+                }
+                else{row$.append($('<td/>').html(cellValue));}
+            }
+            $("#excelDataTable").append(row$);
+        }
+        document.getElementById('excelDataTable').style.display = "block";
+    }
+
+    function addAllColumnHeaders(myList)
+    {
+        var columnSet = [];
+        var headerTr$ = $('<tr/>');
+        for (var i = 0 ; i < myList.length ; i++) {
+            var rowHash = myList[i];
+            for (var key in rowHash) {
+                if ($.inArray(key, columnSet) == -1){
+                    columnSet.push(key);
+                    headerTr$.append($('<th/>').html(key));
+                }
+            }
+        }
+        $("#excelDataTable").append(headerTr$);
     
+        return columnSet;
+    }
+
 });
 
 // app.controller('loggedController', function($scope, $http, $window, $q, $timeout) {

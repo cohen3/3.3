@@ -2,6 +2,7 @@
 <html lang="en">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
 <script src="controller.js"></script>
 <script src="popup.js"></script>
 <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -26,37 +27,48 @@
     </div>
 <br><br><br><br><br><br>
 
+<!-- Welcome Div-->
+<div id="welcome" style="display: block;">
+        welcome {{ firstName }}
+        <!--<label for="poiname"><b>POI NAME</b></label>
+        <input type="text" placeholder="Enter username" id="poiname" name="poiname" required>
+        <button type="button" id="forgot-btn2" ng-click="getpoiname()" style="display: inlines;">get POI</button><br>-->
+        <br><label for="Category"><b> serach POIs by Category </b></label>
+            <select id="cats">
+              <option id=Category ng-repeat="x in categories" >{{x}}</option>
+              </select>
+              sort by POI<input type="checkbox" id="myCheck">
+              <button type="button" id="forgot-btnd2" ng-click="getpoicat()" style="display: inlines;">get cat</button><br>
+              <br><br><table id="excelDataTable" border="1">
+                </table>
+        </div>
+
 <div id="splittedDiv" style="display: block;">
     <div class="split left">
-            <div class="centered">
-            <h2>Jane Flex</h2>
-            <p>Some text.</p>
+            <div class="centered" ng-bind-html="User_Last_Saved_POIs">
             </div>
     </div>
       
     <div class="split right">
-            <div class="centered">
-            <h2>John Doe</h2>
-            <p>Some text here too.</p>
+            <div class="centered" ng-bind-html="User_Based_Rec_POIs">
             </div>
     </div>
 </div>
+
+<!-- account -->
+<div id="loggedUserDiv" ng-bind-html="loggedUser" style="display: none;"></div>
 
 
 <!-- Sidebar -->
 <div class="w3-sidebar w3-bar-block w3-animate-left" style="display:none;z-index:5;top:85px;" id="mySidebar">
         <button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close &times;</button>
-        <button class="w3-bar-item w3-button">My Points Of Interest</button>
-        <button class="w3-bar-item w3-button">My Interests</button>
-        <button class="w3-bar-item w3-button">Settings</button>
+        <button class="w3-bar-item w3-button" ng-click="sidebarhome()">Home</button>
+        <button class="w3-bar-item w3-button" ng-click="sidebarClickPOIs()">My Points Of Interest</button>
+        <button class="w3-bar-item w3-button" ng-click="sidebarInterests()">My Interests</button>
+        <button class="w3-bar-item w3-button" ng-click="sidebarSettings()">Account Info</button>
 </div>
 <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
-<div id="menubtn" style="position: absolute; left: 0%; top: 100px; display: none;"><button class="w3-button w3-white w3-xxlarge" onclick="w3_open()">&#9776; Menu</button></div>
-
-<!-- Welcome Div-->
-<div id="welcome" style="display: block;">
-welcome {{ firstName }}
-</div>
+<div id="menubtn" style="position: absolute; left: 0%; top: 85px; display: none;"><button class="w3-button w3-white w3-xxlarge" onclick="w3_open()">&#9776; Menu</button></div>
 
 <!-- POI table view -->
 <div id="poi_view" style="display: none;">
@@ -82,18 +94,18 @@ welcome {{ firstName }}
 </div>
 
 <!-- About Div -->
-<div id="about" style="display: none;">
-        <h1>
+<div id="about" style="background-color:rgb(192, 174, 75);display: none;">
+        <h3>
         our informative city hall website:    <a href="https://www.beer-sheva.muni.il/Pages/default.aspx">
         <img border="0"  src="images\citylogo.png" width="140" height="100"></a>
-        </h1>
-        <h1>Welcome to our site, here you can see information about the posh shona daled  <img src="images\dalet.jpg" height="160" width="160"></h1>
-        <h1>and our beautiful hotel <img src="images\hotel.jpg" height="160" width="160"></h1>
-        <h1>and our professional students <img src="images\party.jpg" height="160" width="160"></h1>
-        <h1>everyone are welcome to visit <a href="https://www.google.com/maps/place/%D7%91%D7%90%D7%A8+%D7%A9%D7%91%D7%A2%E2%80%AD/data=!4m2!3m1!1s0x15026640029f8777:0x8dee8012deb5dd8?sa=X&ved=2ahUKEwjq55X21OviAhWZWhUIHfF1BKoQ8gEwAHoECAoQAQ">
-          Be'er-Sheva</a> in the coordinates 34.706400 to 34.869200 East and 31.174294 to 31.332650 North</h1>
-        <h1>you can reach out city using many different  <a href="https://www.bus.co.il/otobusimmvc?">busses</a>
-           or by <a href="https://www.rail.co.il/">train</a> </h1>
+        </h3>
+        <h3>Welcome to our site, here you can see information about the posh shona daled  <img src="images\dalet.jpg" height="160" width="160">
+        and our beautiful hotel <img src="images\hotel.jpg" height="160" width="160"></h3>
+        <h3>and our estimed students <img src="images\party.jpg" height="160" width="160"></h3>
+        <h3>everyone are welcome to visit <a href="https://www.google.com/maps/place/%D7%91%D7%90%D7%A8+%D7%A9%D7%91%D7%A2%E2%80%AD/data=!4m2!3m1!1s0x15026640029f8777:0x8dee8012deb5dd8?sa=X&ved=2ahUKEwjq55X21OviAhWZWhUIHfF1BKoQ8gEwAHoECAoQAQ">
+          Be'er-Sheva</a> in the coordinates 34.706400 to 34.869200 East and 31.174294 to 31.332650 North</h3>
+        <h3>you can reach out city using many different  <a href="https://www.bus.co.il/otobusimmvc?">busses</a>
+           or by<a href="https://www.rail.co.il/">train</a> </h3>
            <h2><font size = "14"><b>all there is left to say is hello, welcome and enjoy :)</b></font></h2>
 </div>
 
@@ -321,6 +333,41 @@ welcome {{ firstName }}
     function w3_close() {
         document.getElementById("mySidebar").style.display = "none";
         document.getElementById("myOverlay").style.display = "none";
+    }
+
+    function sortTable() {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("excelDataTable");
+        switching = true;
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+            //start by saying there should be no switching:
+            shouldSwitch = false;
+            /*Get the two elements you want to compare,
+            one from current row and one from the next:*/
+            x = parseFloat(rows[i].getElementsByTagName("TD")[2].innerHTML);
+            y = parseFloat(rows[i + 1].getElementsByTagName("TD")[2].innerHTML);
+            //check if the two rows should switch place:
+            if (x < y) {
+                //if so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+            }
+            }
+            if (shouldSwitch) {
+            /*If a switch has been marked, make the switch
+            and mark that a switch has been done:*/
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            }
+        }
     }
 </script>
 </html>
