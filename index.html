@@ -10,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="popup.css" />
 <link rel="stylesheet" type="text/css" href="slider.css" />
 <link rel="stylesheet" type="text/css" href="table.css" />
+<link rel="stylesheet" type="text/css" href="form.css" />
 <link rel="stylesheet" type="text/css" href="splittedPage.css" />
 <body ng-app="myApp" ng-controller="myCtrl">
     <div class="header">                            <!------- Header DIV here --------->
@@ -29,16 +30,16 @@
 
 <!-- Welcome Div-->
 <div id="welcome" style="display: block;">
-        welcome {{ firstName }}
-        <!--<label for="poiname"><b>POI NAME</b></label>
+        welcome {{ username }}<br><br>
+        <label for="poiname"><b>serach POIs by Name</b></label><br>
         <input type="text" placeholder="Enter username" id="poiname" name="poiname" required>
-        <button type="button" id="forgot-btn2" ng-click="getpoiname()" style="display: inlines;">get POI</button><br>-->
-        <br><label for="Category"><b> serach POIs by Category </b></label>
+        <button type="button" ng-click="getpoiname()" style="display: inlines;">get POI</button><br><br>
+        <br><label for="Category"><b> serach POIs by Category </b></label><br>
             <select id="cats">
               <option id=Category ng-repeat="x in categories" >{{x}}</option>
               </select>
-              sort by POI<input type="checkbox" id="myCheck">
-              <button type="button" id="forgot-btnd2" ng-click="getpoicat()" style="display: inlines;">get cat</button><br>
+              <button type="button" id="forgot-btnd2" ng-click="getpoicat()" style="display: inline;">get cat</button><br>
+              sort by rank <input type="checkbox" id="myCheck">
               <br><br><table id="excelDataTable" border="1">
                 </table>
         </div>
@@ -61,14 +62,15 @@
 
 <!-- Sidebar -->
 <div class="w3-sidebar w3-bar-block w3-animate-left" style="display:none;z-index:5;top:85px;" id="mySidebar">
-        <button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close &times;</button>
-        <button class="w3-bar-item w3-button" ng-click="sidebarhome()">Home</button>
-        <button class="w3-bar-item w3-button" ng-click="sidebarClickPOIs()">My Points Of Interest</button>
-        <button class="w3-bar-item w3-button" ng-click="sidebarInterests()">My Interests</button>
-        <button class="w3-bar-item w3-button" ng-click="sidebarSettings()">Account Info</button>
+        <button class="w3-bar-item w3-button w3-large" ng-click="setnum()" onclick="w3_close()">Close &times;</button>
+        <button class="w3-bar-item w3-button" onclick="loggedDivMenuClick()" ng-click="sidebarhome()">Home</button>
+        <button class="w3-bar-item w3-button" onclick="loggedDivMenuClick()" ng-click="sidebarClickPOIs()">My Points Of Interest {{ number_of_pois }}</button>
+        <button class="w3-bar-item w3-button" onclick="loggedDivMenuClick()" ng-click="sidebarInterests()">My Interests</button>
+        <button class="w3-bar-item w3-button" onclick="loggedDivMenuClick()" ng-click="sidebarSettings()">Account Info</button>
 </div>
 <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
 <div id="menubtn" style="position: absolute; left: 0%; top: 85px; display: none;"><button class="w3-button w3-white w3-xxlarge" onclick="w3_open()">&#9776; Menu</button></div>
+
 
 <!-- POI table view -->
 <div id="poi_view" style="display: none;">
@@ -121,48 +123,46 @@
         <p id="text_per_pass"style="display: none;">password is : </p><p ng-bind="passwordR" ></p>
         <p id="timer" style="display: none;"></p>
 </div>
-                                          <!-- Register Div -->
-<div id="register" style="display: none;">
 
-    <label for="firstname"><b>First Name</b></label>
-    <input type="text" id="firstname" placeholder="First name" ng-model="firstName" pattern="^[a-zA-Z]+$" required>
-    <br>
-    <label for="lastname"><b>Last Name</b></label>
-     <input type="text" id="lastname" placeholder="Last name" ng-model="lastName" pattern="^[a-zA-Z]+$" required>
-     <br>
-     <label for="City"><b>City</b></label>
-     <input type="text" id="City" placeholder="City" pattern="^[a-zA-Z]+$" ng-model="City" required>
-     <br>
-    <label for="username1"><b>User name, Must be 3-8 letters only</b></label>
-    <input type="text" placeholder="Enter username" id="username1" name="username1" ng-model="tmpname" required>
-    <br>
-    <label for="psw"><b>Password, Must be 5-10 letters and digits</b></label>
-    <input type="password" placeholder="Enter Password" id="psw" name="psw" title="Password must contain at least 8 or more characters and digits" ng-model="password" required>
-    <br>
-    <label for="Country"><b>Country</b></label>
-    <select ng-model="Country">
-      <option id=Country ng-repeat="x in countries" >{{x}}</option>
-      </select>
-      <br>
-      <label for="email"><b>Email adress</b></label>
-    <input type="text" placeholder="Enter Email" id="email" name="email" title="Invalid email address" ng-model="email" required><br>
-    <label for="Interest1"><b>Interest 1</b></label>
-    <input type="text" name="Interest1" placeholder="Interest" ng-model="Interest1"><br>
-    <label for="Interest2"><b>Interest 2</b></label>
-    <input type="text" name="Interest2" placeholder="Interest" ng-model="Interest2"><br>
-    <label for="Interests"><b>Interests</b></label>
-    <input type="text" name="Interests" placeholder="Interests" ng-model="Interests"><br>
-    <label for="Question1"><b>Question1</b></label>
-    <input type="text" name="Question1" placeholder="Question 1" ng-model="Question1"><br>
-    <label for="Answer1"><b>Answer1</b></label>
-    <input type="password" name="Answer1" id="Answer1" placeholder="Answer 1" ng-model="Answer1"><br>
-    <label for="Question2"><b>Question2</b></label>
-    <input type="text" id="Question2"name="Question2" placeholder="Question 2" ng-model="Question2"><br>
-    <label for="Answer2"><b>Answer2</b></label>
-    <input type="password" id="Answer2"name="Answer2" placeholder="Answer 2" ng-model="Answer2"><br>
-    
-    <button ng-click="register()">Register</button>
-</div>
+<!-- Register Div -->
+<div id="register" class="container" style="display: none;">
+        <label for="firstname"><b>First Name</b></label>
+        <input type="text" id="firstname" placeholder="First name" ng-model="firstName" required>
+        <label for="lastname"><b>Last Name</b></label>
+         <input type="text" id="lastname" placeholder="Last name" ng-model="lastName" required>
+         <br>
+         <label for="City"><b>City</b></label>
+         <input type="text" id="City" placeholder="City"  ng-model="City" required>
+         <br>
+        <label for="username1"><b>User name, Must be 3-8 letters only </b></label>
+        <input type="text" placeholder="Enter username" id="username1" name="username1" ng-model="tmpname"  required>
+        <br>
+        <label for="psw"><b>Password, Must be 5-10 letters and digits</b></label>
+        <input type="password" placeholder="Enter Password" id="psw" name="psw"  title="Password must contain at least 8 or more characters and digits" ng-model="password" required>
+        <br>
+        <label for="Country"><b>Country</b></label>
+        <select ng-model="Country" required>
+        <option id=Country ng-repeat="x in countries" >{{x}}</option>
+        </select>      <br>
+        <label for="email"><b>Email adress</b></label>
+        <input type="text" placeholder="Enter Email" id="email" name="email" title="Invalid email address" ng-model="email" required><br>
+        <label for="Interest1"><b>Interest 1</b></label>
+        <input type="text" id="Interest1" name="Interest1" placeholder="Interest" ng-model="Interest1" required>
+        <label for="Interest2"><b>Interest 2</b></label>
+        <input type="text" id="Interest2" name="Interest2" placeholder="Interest" ng-model="Interest2" required><br>
+        <label for="Interests"><b>Interests</b></label>
+        <input type="text" id="Interests" name="Interests" placeholder="Interests" ng-model="Interests"><br>
+        <label for="Question1"><b>Question1</b></label>
+        <input type="text" id="Question1" name="Question1" placeholder="Question 1" ng-model="Question1" required>
+        <label for="Answer1"><b>Answer1</b></label>
+        <input type="password" name="Answer1" id="Answer1" placeholder="Answer 1" ng-model="Answer1" required><br>
+        <label for="Question2"><b>Question2</b></label>
+        <input type="text" id="Question2" name="Question2" placeholder="Question 2" ng-model="Question2" required>
+        <label for="Answer2"><b>Answer2</b></label>
+        <input type="password" id="Answer2" name="Answer2" placeholder="Answer 2" ng-model="Answer2" required><br>
+        
+        <button ng-click="register()">Register</button>
+    </div>
 
 
 
@@ -236,8 +236,10 @@
      * @param left
      * @param right
      */
-    function closeDivs(welcome, login, table, settings,register, left,right, about)
+    function closeDivs(welcome, login, table, loggedDiv,register, left,right, about)
     {
+        if(loggedDiv)
+            document.getElementById('loggedUserDiv').innerHTML = "";
         if(welcome)
             document.getElementById("welcome").style.display = "none";
         if(register)
@@ -251,6 +253,11 @@
         if(about)
             document.getElementById("about").style.display = "none";
     }
+
+    function loggedDivMenuClick(){
+        closeDivs(true, true, true, true, true, true, true, true);
+    }
+
     function OpenGame()
     {
         if(document.getElementById("loginbtn").innerText === "Login") {

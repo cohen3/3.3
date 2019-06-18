@@ -29,6 +29,9 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
     var values = [];
     showSlides();
     setWelcomeDiv();
+    var total_pois = 0;
+    $scope.number_of_pois = total_pois;
+
     function checkKeys()
     {
         if($window.sessionStorage.getItem("lastuser") === null)
@@ -42,13 +45,14 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
         if($window.sessionStorage.getItem("lastuser") != '')
         {
             GetLoggedUserInfo();
+            getnum();
             document.getElementById('reg_up').style.display = 'none';
             document.getElementById('log_up').style.display = 'none';
             document.getElementById('menubtn').style.display = "block";
         }
         else
         {
-            $scope.firstName = "Guest";
+            $scope.username = "Guest";
             document.getElementById('reg_up').style.display = 'inline';
             document.getElementById('log_up').style.display = 'inline';
         }
@@ -76,6 +80,7 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
         if($window.sessionStorage.getItem("lastuser") != '')
         {
             var name = $window.sessionStorage.getItem("lastuser");
+            getnum();
             logged = true;
             $scope.loginstatus = "Disconnect";
             $scope.username = name;
@@ -159,7 +164,7 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
                 document.getElementById('welcome').style.display = "block";
                 document.getElementById('menubtn').style.display = "block";
                 setWelcomeDiv();
-
+                getnum();
             }).catch(function(res){alert("wrong username or password");});
         }
         else
@@ -174,6 +179,24 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
         
     };
 
+    function getnum(){
+        var req = {
+            method: 'GET',
+            url: 'http://localhost:3000/logged/viewedpois',
+            headers: {
+                'x-auth-token': $window.sessionStorage.getItem("token")
+            },
+            params: {
+                'username': $window.sessionStorage.getItem("lastuser")
+            }
+        };
+        $http(req).then(function(response){
+            $scope.number_of_pois = '('+response.data+')';
+        }).catch(function(error){
+            alert(error.statusText);
+            $scope.number_of_pois = '('+0+')';
+        });
+    }
 
     $scope.disconnect = function(){
         if(logged)
@@ -239,6 +262,14 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
     }
 
     $scope.register = function(){
+        if($scope.tmpname.length<3 || $scope.tmpname.length>8 || !(/^[a-zA-Z]+$/.test($scope.tmpname))){
+            $scope.tmpname="";alert("username must be 3 to 9 characters long ")
+            return;
+        }
+        if($scope.password.length<5 ||$scope.password.length>10 || !(/^[a-zA-Z0-9]+$/.test($scope.password))){
+            $scope.password="";alert("password must be 5 to 10 characters and digits long")
+            return;
+        }
         try{
         var parameter =                {type:"user",
                                         username:$scope.tmpname,
@@ -381,16 +412,64 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
                 username:$window.sessionStorage.getItem('lastuser')
             }
         };
-        alert("ok");
         var userdata = $http(req);
         userdata.then(function(response){
             var promises = [];
+            var POIdata = [];
             for(var i = 0; i < response.data.length; i = i+1)
             {
-                promises.push($http.get('http://localhost:3000/getpoibyID/'+response.data[i]));
+                promises.push(
+                    $http.get('http://localhost:3000/getpoibyID/'+response.data[i])
+                    .then(function(resPromise){
+                        POIdata.push(resPromise.data);
+                }));
             }
             $q.all(promises).then(function(response2){
-                alert("ok2");
+
+                $scope.loggedUser += "<table border=\"1\" id=\"datatable\" style=\"background-color: #f1f1c1;\">";
+                $scope.loggedUser += "<tr style=\"padding: 15px;text-align: left;\">";
+                angular.forEach(POIdata[0], function(value, key){
+                    var title = key;
+                    if(title != 'ID' && title != 'numranked'){
+                        if(title === 'picture_link') 
+                            title = 'Picture';
+                        if(title === 'viewed_num')
+                            title = 'Viewed';
+                        $scope.loggedUser += "<th>"+title+"</th>";
+                    }
+                });
+                $scope.loggedUser += "</tr>";
+                for(var i = 0; i < POIdata.length; i++){
+                    $scope.loggedUser += "<tr style=\"padding: 15px;text-align: left;\">";
+                    angular.forEach(POIdata[i], function(value, key){
+                        if(key != 'ID' && key != 'numranked'){
+                            if(key === 'picture_link')
+                            $scope.loggedUser += "<td><img src=\""+value+"\" width=\"100\" height=\"100\" /></td>";
+                            else
+                                $scope.loggedUser += "<td>"+value+"</td>";
+                        }
+                    });
+                    $scope.loggedUser += "</tr>";
+                }
+
+                $scope.loggedUser += "</tr>";
+
+                for(var j = 0; j < response2.length; j++)
+                {
+                    //alert(POIdata[j]['name']);
+                    // $scope.loggedUser += "<table border=\"1\" id=\"datatable\" style=\"background-color: #f1f1c1;\">";
+                    // $scope.loggedUser += "<tr style=\"padding: 15px;text-align: left;\">";
+                    // $scope.loggedUser += "<th>Settings</th>";
+                    // $scope.loggedUser += "<th>Value</th>";
+                    // $scope.loggedUser += "</tr>";
+                    // angular.forEach(response.data[0], function(value, key){
+                    //     $scope.loggedUser += "<tr style=\"padding: 15px;text-align: left;\">";
+                    //     $scope.loggedUser += "<td>"+key+"</td>";
+                    //     $scope.loggedUser += "<td>"+value+"</td>";
+                    //     $scope.loggedUser += "</tr>";
+                    // });
+                    // $scope.loggedUser += "</table>";
+                }
             });
         }).catch(function(res){alert(res.status);});
     };
@@ -430,6 +509,7 @@ app.controller('myCtrl', function($scope, $http, $window, $q, $timeout) {
         document.getElementById('loggedUserDiv').style.display = "none";
         $scope.loggedUser = "";
         document.getElementById('splittedDiv').style.display = "block";
+        document.getElementById('welcome').style.display = "block";
     }
 
     function buildPOITable() {
